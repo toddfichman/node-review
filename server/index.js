@@ -1,12 +1,23 @@
-const http = require("http");
+const express = require("express");
+const path = require("path");
+const parser = require("body-parser");
 
-const requestHandler = require("./handler.js");
-
+const server = express();
 const port = 3000;
 
-const ip = "127.0.0.1";
+const routes = require("./routes.js");
 
-const server = http.createServer(requestHandler);
+const customLogger = (req, res, next) => {
+  console.log("Serving request type", req.method, "to path", req.path);
+  next();
+};
 
-server.listen(port, ip);
-console.log("Listening on port", port);
+server.use(parser.json());
+server.use(parser.urlencoded({ extended: false }));
+server.use(customLogger);
+
+server.use(express.static(path.join(__dirname, "../client/dist")));
+
+server.use("/api", routes);
+
+server.listen(port, () => console.log(`Server listening on port ${port}`));
