@@ -4,7 +4,6 @@ const lists = {
 };
 
 module.exports = {
-  todolist: {
     fetch: (req, res) => {
       const { listName } = req.query;
       if (listName in lists) {
@@ -23,5 +22,4 @@ module.exports = {
       lists[listName].splice(+index, 1);
       res.status(202).send(lists[listName]); //202 is accepted
     }
-  }
 };
