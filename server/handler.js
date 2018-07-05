@@ -1,4 +1,6 @@
 const url = require("url");
+const fs = require("fs");
+const path = require("path");
 const { sendResponse, parseData } = require("./helpers.js");
 
 //This is an in-memory object in place of a database. Do not do this in practice.
@@ -7,10 +9,25 @@ const lists = {
 };
 
 const routes = {
+  static: {
+    GET: (req, res) => {
+      let pathname = url.parse(req.url).pathname;
+      if (pathname !== "/bundle.js") {
+        pathname = "/index.html";
+      }
+      fs.readFile(
+        path.join(__dirname, `../client/dist${pathname}`),
+        "utf8",
+        (err, data) => {
+          if (err) {
+            throw err;
+          }
+          res.end(data);
+        }
+      );
+    }
+  },
   "/api/todolist": {
-    OPTIONS: (req, res) => {
-      sendResponse(res, null, 200);
-    },
     GET: (req, res) => {
       const query = url.parse(req.url, true).query;
       const { listName } = query;
@@ -42,6 +59,9 @@ const routes = {
 module.exports = (req, res) => {
   let pathname = url.parse(req.url).pathname;
   console.log('Serving request type', req.method, 'to path', pathname);
+  if (pathname !== "/api/lists" && pathname !== "/api/todolist") {
+    pathname = "static";
+  }
   const handler = routes[pathname][req.method];
   if (handler) {
     handler(req, res);
