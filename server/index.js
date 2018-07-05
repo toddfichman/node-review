@@ -1,6 +1,7 @@
 const express = require("express");
 const path = require("path");
 const parser = require("body-parser");
+const helmet = require("helmet");
 
 const server = express();
 const port = 3000;
@@ -12,12 +13,19 @@ const customLogger = (req, res, next) => {
   next();
 };
 
+server.use(helmet());
 server.use(parser.json());
+
 server.use(parser.urlencoded({ extended: false }));
+
 server.use(customLogger);
+
 
 server.use(express.static(path.join(__dirname, "../client/dist")));
 
+
 server.use("/api", routes);
 
+
+//listening on a port
 server.listen(port, () => console.log(`Server listening on port ${port}`));

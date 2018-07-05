@@ -16,12 +16,12 @@ module.exports = {
     post: (req, res) => {
       const { todo, listName } = req.body;
       lists[listName].push(todo);
-      res.status(201).send(lists[listName]);
+      res.status(201).send(lists[listName]); //201 is created
     },
     delete: (req, res) => {
       const { index, listName } = req.query;
       lists[listName].splice(+index, 1);
-      res.status(202).send(lists[listName]);
+      res.status(202).send(lists[listName]); //202 is accepted
     }
   }
 };
