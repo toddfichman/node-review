@@ -26,6 +26,7 @@
     "babel-preset-react": "^6.24.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.2",
+    "helmet": "^3.12.1",
     "nodemon": "^1.14.12",
     "path": "^0.12.7",
     "react": "^16.2.0",
